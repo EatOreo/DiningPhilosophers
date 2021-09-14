@@ -1,35 +1,26 @@
 package main
+
 import (
-	"strconv"
 )
-type Fork struct{
-	used bool
-	in chan int
-}
 
-func forkiphize(inp chan int){
-	uses := 0
-	usedBy :=-1
+func Forkiphize(n int, self Entity){
+	var inUse bool
+	var uses int
 
-	for true{
-		select{
-		case a:= <- inp:
-			if(a == 42){
+	for true {
+		query := <- self.Input
+		//fmt.Println(n, query)
+		switch query.Msg {
+		case "take?":
+			if !inUse {
+				inUse = true
 				uses++
-			}else if(a == 0){
-				output <- strconv.Itoa(uses)
-			}else if(a >=10 && a<15){
-				usedBy = a-10
-			}else if(a == -3){
-				usedBy = -1;
-			}else if(a == 1){
-				if(usedBy == -1){
-					output <-"Not in use"
-				}else{
-					output <-strconv.Itoa(usedBy)
+				query.Confirm <- true
+				} else {
+					query.Confirm <- false
 				}
-			}
-		default:
-		}
-}
+		case "putdown":
+			inUse = false
+		}		
+	}
 }
