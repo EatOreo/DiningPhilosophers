@@ -37,12 +37,12 @@ func main() {
 		} else if (what == "all") {
 			for i, v := range(philos) {
 				v.Input <- Request{"all", nil}
-				fmt.Println("p:", i + 1, "is", <-v.Output)
+				fmt.Println("phil:", i + 1, "is", <-v.Output)
 			}
 			fmt.Println("")
 			for i, v := range(forks) {
 				v.Input <- Request{"all", nil}
-				fmt.Println("f:", i + 1, "is", <-v.Output)
+				fmt.Println("fork:", i + 1, "is", <-v.Output)
 			}
 			continue
 		}
