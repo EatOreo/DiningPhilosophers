@@ -1,9 +1,11 @@
 package main
 
-import "time"
+import (
+	"fmt"
+)
 
 type Entity struct {
-	Input chan Request
+	Input  chan Request
 	Output chan string
 }
 
@@ -24,5 +26,35 @@ func main() {
 		go Philosophize(i, philos[i], forks[i], forks[(i+1)%5])
 		go Forkiphize(i, forks[i])
 	}
-	time.Sleep(time.Second * 10)
+	for true {
+		var what, query string
+		var which int
+		fmt.Scan(&what)
+		if (what == "end") {
+			break
+		} else if (what == "all") {
+			for i, v := range(philos) {
+				v.Input <- Request{"all", nil}
+				fmt.Println("p:", i + 1, "is", <-v.Output)
+			}
+			fmt.Println("")
+			for i, v := range(forks) {
+				v.Input <- Request{"all", nil}
+				fmt.Println("f:", i + 1, "is", <-v.Output)
+			}
+			continue
+		}
+		fmt.Scan(&which, &query)
+		which--
+		switch what {
+		case "p":
+			philos[which].Input <- Request{query, nil}
+			fmt.Println(<- philos[which].Output)
+			break
+		case "f":
+			forks[which].Input <- Request{query, nil}
+			fmt.Println(<- forks[which].Output)
+			break
+		}
+	}
 }
