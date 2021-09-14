@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+//Best query to get an overview is just "all", philosopher n can use forks n and n+1
+
 type Entity struct {
 	Input  chan Request
 	Output chan string
