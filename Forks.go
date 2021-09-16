@@ -1,9 +1,9 @@
 package main
 
 import (
-	"strconv"
-	"time"
 	"math/rand"
+	"time"
+	"strconv"
 )
 
 func Forkiphize(n int, self Entity) {
@@ -31,12 +31,12 @@ func Forkiphize(n int, self Entity) {
 			inUse = false
 		case "state":
 			if inUse {
-				self.Output <- "Fork " + strconv.Itoa(n + 1) + " is being used"
+				self.Output <- "Fork " + strconv.Itoa(n+1) + " is being used"
 			} else {
-				self.Output <- "Fork " + strconv.Itoa(n + 1) + " is not being used"
+				self.Output <- "Fork " + strconv.Itoa(n+1) + " is not being used"
 			}
 		case "times":
-			self.Output <- "Fork " + strconv.Itoa(n + 1) + " has been used " + strconv.Itoa(uses) + " times"
+			self.Output <- "Fork " + strconv.Itoa(n+1) + " has been used " + strconv.Itoa(uses) + " times"
 		case "all":
 			if inUse {
 				self.Output <- "in use, and has " + strconv.Itoa(uses) + " (attempted) uses"

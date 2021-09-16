@@ -31,7 +31,7 @@ func Philosophize(n int, self, leftFork, rightFork Entity) {
 			max = 4
 		}
 		finished := make(chan bool)
-		go timeOut(min, max,finished)
+		go timeOut(min, max, finished)
 
 		for do {
 			select {
@@ -39,12 +39,12 @@ func Philosophize(n int, self, leftFork, rightFork Entity) {
 				switch query.Msg {
 				case "state":
 					if eating {
-						self.Output <- "Philosopher " + strconv.Itoa(n + 1) + " is eating"
+						self.Output <- "Philosopher " + strconv.Itoa(n+1) + " is eating"
 					} else {
-						self.Output <- "Philosopher " + strconv.Itoa(n + 1) + " is thinking"
+						self.Output <- "Philosopher " + strconv.Itoa(n+1) + " is thinking"
 					}
 				case "times":
-					self.Output <- "Philosopher " + strconv.Itoa(n + 1) + " has eaten " + strconv.Itoa(eaten) + " times"
+					self.Output <- "Philosopher " + strconv.Itoa(n+1) + " has eaten " + strconv.Itoa(eaten) + " times"
 				case "all":
 					if eating {
 						self.Output <- "eating, and has " + strconv.Itoa(eaten) + " times"
@@ -73,6 +73,6 @@ func Philosophize(n int, self, leftFork, rightFork Entity) {
 }
 
 func timeOut(min, max int, finished chan bool) {
-	time.Sleep(time.Duration(min + rand.Intn(max - min) * int(time.Second)))
+	time.Sleep(time.Duration(min + rand.Intn(max-min)*int(time.Second)))
 	finished <- true
 }

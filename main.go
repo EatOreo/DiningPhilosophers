@@ -32,17 +32,17 @@ func main() {
 		var what, query string
 		var which int
 		fmt.Scan(&what)
-		if (what == "end") {
+		if what == "end" {
 			break
-		} else if (what == "all") {
-			for i, v := range(philos) {
+		} else if what == "all" {
+			for i, v := range philos {
 				v.Input <- Request{"all", nil}
-				fmt.Println("phil:", i + 1, "is", <-v.Output)
+				fmt.Println("phil:", i+1, "is", <-v.Output)
 			}
 			fmt.Println("")
-			for i, v := range(forks) {
+			for i, v := range forks {
 				v.Input <- Request{"all", nil}
-				fmt.Println("fork:", i + 1, "is", <-v.Output)
+				fmt.Println("fork:", i+1, "is", <-v.Output)
 			}
 			continue
 		}
@@ -51,11 +51,11 @@ func main() {
 		switch what {
 		case "p":
 			philos[which].Input <- Request{query, nil}
-			fmt.Println(<- philos[which].Output)
+			fmt.Println(<-philos[which].Output)
 			break
 		case "f":
 			forks[which].Input <- Request{query, nil}
-			fmt.Println(<- forks[which].Output)
+			fmt.Println(<-forks[which].Output)
 			break
 		}
 	}
