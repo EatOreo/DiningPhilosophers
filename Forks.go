@@ -1,35 +1,52 @@
 package main
+
 import (
 	"strconv"
+	"time"
+	"math/rand"
 )
-type Fork struct{
-	used bool
-	in chan int
-}
 
-func forkiphize(inp chan int){
-	uses := 0
-	usedBy :=-1
-
-	for true{
-		select{
-		case a:= <- inp:
-			if(a == 42){
+func Forkiphize(n int, self Entity) {
+	var inUse bool
+	var uses int
+	for true {
+		//The fact that there can only be one request in the input channel at a time guarantees that only one
+		//philosopher can pick use a fork at a time
+		req := <-self.Input
+		switch req.Msg {
+		case "take?":
+			if !inUse {
+				inUse = true
+				//
 				uses++
-			}else if(a == 0){
-				output <- strconv.Itoa(uses)
-			}else if(a >=10 && a<15){
-				usedBy = a-10
-			}else if(a == -3){
-				usedBy = -1;
-			}else if(a == 1){
-				if(usedBy == -1){
-					output <-"Not in use"
-				}else{
-					output <-strconv.Itoa(usedBy)
-				}
+				//The request has to be confirmed or denied otherwise the philospher would be left in a deadlock
+				//The request has its own channel for the fork to confirm the request instead of using its Output
+				//channel which could cause a race condition, because another philosopher than the one who send
+				//the request, could recieve the answer
+				req.Confirm <- true
+			} else {
+				req.Confirm <- false
+			}
+		case "putdown":
+			inUse = false
+		case "state":
+			if inUse {
+				self.Output <- "Fork " + strconv.Itoa(n + 1) + " is being used"
+			} else {
+				self.Output <- "Fork " + strconv.Itoa(n + 1) + " is not being used"
+			}
+		case "times":
+			self.Output <- "Fork " + strconv.Itoa(n + 1) + " has been used " + strconv.Itoa(uses) + " times"
+		case "all":
+			if inUse {
+				self.Output <- "in use, and has " + strconv.Itoa(uses) + " (attempted) uses"
+			} else {
+				self.Output <- "not in use, and has " + strconv.Itoa(uses) + " (attempted) uses"
 			}
 		default:
+			self.Output <- "Not a query, try 'state' or 'times'"
 		}
-}
+		//just a little delay (nanoseconds), not neccesarry
+		time.Sleep(time.Duration(int(rand.Intn(10000000))))
+	}
 }
